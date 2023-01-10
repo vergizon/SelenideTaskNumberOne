@@ -4,6 +4,8 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -16,13 +18,23 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class CardDeliveryTest {
 
+    @BeforeEach
+    void setUp() {
+        Configuration.headless = true;
+        open("http://localhost:9999/");
+    }
+
+    @AfterEach
+    void teardown() {
+        closeWebDriver();
+    }
+
     String generateDate(int days) {
         return LocalDate.now().plusDays(days).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
     }
 
     @Test
     void shouldRegisterDateOfMeeting() {
-        open("http://localhost:9999/");
         $("[data-test-id=\"city\"] input").setValue("Краснодар");
         $("[data-test-id=\"date\"] input").setValue(generateDate(3));
         $("[data-test-id=\"name\"] input").setValue("Иван Сергеев-Петров");
